@@ -68,8 +68,8 @@ if __name__ == '__main__':
     ####################################################################
     
     #### loss function -- mse:
-    olr_mse = lambda m,b,x,y: np.sum((y-m*x-b)**2)/(y.shape[1])
-    olr_mae = lambda m,b,x,y: np.sum(np.abs(y-m*x-b))/(y.shape[1])
+    olr_mse = lambda m,b,x,y: np.sum((y-m*x-b)**2)/(y.shape[0])
+    olr_mae = lambda m,b,x,y: np.sum(np.abs(y-m*x-b))/(y.shape[0])
     #### optimization of m,b:
     olr = minimize(lambda coef: olr_mse(*coef, X_train_18,y_train_18), 
                    x0=[1,1])
@@ -116,10 +116,10 @@ if __name__ == '__main__':
     
     #### loss function mse, mae:
     
-    f1 = lambda x,w,x0,s: 1 + np.exp(-(x-x0)/w)
-    logreg_f = lambda x,A,w,x0,s: A/(1+f1(x,w,x0,s))+s
-    logreg_mse = lambda x,y,A,w,x0,s: np.sum((y-logreg_f(x,A,w,x0,s))**2)/(y.shape[1])
-    logreg_mae = lambda x,y,A,w,x0,s: np.sum(np.abs(y-logreg_f(x,A,w,x0,s)))/(y.shape[1])
+    f1 = lambda x,w,x0: 1 + np.exp(-(x-x0)/w)
+    logreg_f = lambda x,A,w,x0,s: A/(1+f1(x,w,x0))+s
+    logreg_mse = lambda x,y,A,w,x0,s: np.sum((y-logreg_f(x,A,w,x0,s))**2)/(y.shape[0])
+    logreg_mae = lambda x,y,A,w,x0,s: np.sum(np.abs(y-logreg_f(x,A,w,x0,s)))/(y.shape[0])
     
     logreg_loss_mse = lambda params: logreg_mse(X_train_2,y_train_2,
                                                                  *params)
