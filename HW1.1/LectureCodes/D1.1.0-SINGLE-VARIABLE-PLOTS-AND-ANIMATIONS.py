@@ -148,6 +148,8 @@ ax.xaxis.set_major_formatter(FormatStrFormatter('%.0f'))
 #SAVE IMAGES
 f.savefig('plot-1.png', bbox_inches='tight')
 f.savefig("plot-1.pdf", bbox_inches='tight')
+
+
 exit()
 
 
@@ -291,4 +293,5 @@ exit()
 # # anim.save(animation_type + '.gif', writer='imagemagick')
 # exit()
 
+## I HAVE WORKED THROUGH THIS EXAMPLE AND UNDERSTAND IT COMPLETELY
 

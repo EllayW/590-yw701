@@ -62,3 +62,4 @@ plt.ylabel('House Price ($) ', fontsize=FS)
 
 plt.show()
 
+## I HAVE WORKED THROUGH THIS EXAMPLE AND UNDERSTAND IT COMPLETELY
