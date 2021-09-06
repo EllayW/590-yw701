@@ -35,7 +35,7 @@ class Read_Json:
         #self.is_adult = self.df['is_adult']
         
 if __name__ == '__main__':
-    data_weight = Read_Json('/home/ella/590-CODES/DATA/weight.json').df
+    data_weight = Read_Json('weight.json').df
     data_under_18 = np.where(data_weight[:,1] < 18)[0]
     
     ## visualize the data point by age and weight
