@@ -89,10 +89,6 @@ if __name__ == '__main__':
       loss_train.append(training_loss)
       loss_test.append(test_loss)
       iterations.append(iteration)
-      
-      plt.plot(iteration,training_loss,c = 'r',marker = 'o')
-      plt.plot(iteration,test_loss, c = 'g',marker = 'o')
-
       iteration+=1
       
       return(out)
@@ -107,9 +103,6 @@ if __name__ == '__main__':
       loss_train.append(training_loss)
       loss_test.append(test_loss)
       iterations.append(iteration)
-      
-      plt.plot(iteration,training_loss,c = 'r',marker = 'o')
-      plt.plot(iteration,test_loss, c = 'g',marker = 'o')
 
       iteration+=1
       
@@ -123,16 +116,23 @@ if __name__ == '__main__':
     
     #### optimization of m,b:
     olr = minimize(loss, x0=np.random.rand(2))
+    
+    ## visualization:
+    while olr.success == False:
+        thred = np.random.rand(2)
+        olr = minimize(loss, x0=thred)
+        
+        
+    plt.scatter(iterations,loss_train,c = 'r')
+    plt.scatter(iterations,loss_test, c = 'g')
+
     plt.xlabel('optimizer iterations')
     plt.ylabel('loss')
     plt.title('Train/Test Error in Linear Regression with Age and Weight')
     plt.legend(['Train Loss', 'Test Loss'])
     plt.show()
     
-    
-    while olr.success == False:
-        thred = np.random.rand(2)
-        olr = minimize(loss, x0=thred)
+    ## prediction
     m,b = olr.x
     olr_pred = m*X_test_18+b
     
@@ -190,16 +190,25 @@ if __name__ == '__main__':
     iteration=0
     
     logreg = minimize(loss, [.5,.5,.5,.5])
+
+    
+    while logreg.success == False:
+        thred = np.random.rand(4)
+        logreg = minimize(loss, thred)
+    
+    ## visualization:
+        
+    plt.scatter(iterations,loss_train,c = 'r')
+    plt.scatter(iterations,loss_test, c = 'g')
+    
     plt.xlabel('optimizer iterations')
     plt.ylabel('loss')
     plt.title('Train/Test Error in Logistic Regression with Age and Weight')
     plt.legend(['Train Loss', 'Test Loss'])
     plt.show()
     
-    while logreg.success == False:
-        thred = np.random.rand(4)
-        logreg = minimize(loss, thred)
-        
+    ## prediction:
+    
     A,w,x0,s = logreg.x
     logreg_pred = logreg_f(X_test_2, A,w,x0,s)
     
@@ -253,17 +262,24 @@ if __name__ == '__main__':
     
     classifier_logreg = minimize(loss2, [.5,0.5,.5,0.5])
     
+    
+    while classifier_logreg.success == False:
+        thred = np.random.rand(4)
+        classifier_logreg = minimize(classifier_logreg_loss_mse, thred)
+        
+        
+    ## visualization:
+    plt.scatter(iterations,loss_train,c = 'r')
+    plt.scatter(iterations,loss_test, c = 'g')
+    
     plt.xlabel('optimizer iterations')
     plt.ylabel('loss')
     plt.title('Train/Test Error in Logistic Regression with Is_adult and Weight')
     plt.legend(['Train Loss', 'Test Loss'])
     plt.show()
     
+    ## prediction:
     
-    while classifier_logreg.success == False:
-        thred = np.random.rand(4)
-        classifier_logreg = minimize(classifier_logreg_loss_mse, thred)
-        
     A,w,x0,s = classifier_logreg.x
     classifier_logreg_pred = logreg_f(X_test, A,w,x0,s)
     
