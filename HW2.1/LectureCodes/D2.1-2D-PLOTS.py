@@ -50,6 +50,7 @@ ax.set_xlabel('x', fontsize=FS); ax.set_ylabel('y', fontsize=FS); ax.set_zlabel(
 surf=ax.plot_surface(X, Y, f(X, Y), cmap='RdGy') 
 plt.show(); 
 
+# I HAVE WORKED THROUGH THIS EXAMPLE AND UNDERSTAND EVERYTHING THAT IT IS DOING
 
 #GRADIENT-1 PLOTTING
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
