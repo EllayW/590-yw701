@@ -50,17 +50,19 @@ if __name__ == '__main__':
     loss_val=[]
     iteration=0
     
-    def training_sets(objective,method,it=0):
+    def training_sets(objective,method):
         X = objective[0] ## batch
         y = objective[1]
         if method == 'mini-batch':
             choose = random.sample(list(range(objective[0].shape[0])), 
                                    int(objective[0].shape[0]/2))
             X_us = X[choose,:]
-            y_use = y[choose,:]
+            y_us = y[choose,:]
         elif method == 'stochastic':
-            X_us = X[:it+1,:]
-            y_us = y[:it+1,:]
+            choose = random.sample(list(range(objective[0].shape[0])), 
+                                   1)
+            X_us = X[choose,:]
+            y_us = y[choose,:]
         elif method == 'batch':
             X_us = X
             y_us= y
@@ -68,17 +70,17 @@ if __name__ == '__main__':
         return([X_us,y_us])
     
     
-    def GD(objective,LR=0.001, method='batch'):
+    def GD(objective,method,LR=0.001):
 
         global iteration,iterations,loss_train,loss_val
         
-        X_use1,y_use1 = training_sets(objective,method,it=0)
+        
         #parameters:
         
         dx=0.001													
         t=0 	 							
         tmax=100000				
-        tol = 10**-8
+        tol = 10**-5
         NDIM = 4
         #xi =np.random.uniform(np.min(X_use),np.max(X_use),NDIM) ## initial guess
         xi = np.array([ 3,0.08,-3.8,-3.44])
@@ -91,9 +93,10 @@ if __name__ == '__main__':
 
         while(t<=tmax):
             t=t+1
+            X_use1,y_use1 = training_sets(objective,method)
             
-            if X_use1.shape[0] != X_train_2.shape[0]:
-                X_use1,y_use1 = training_sets(objective,method,it=t)
+            #if X_use1.shape[0] != X_train_2.shape[0]:
+                #X_use1,y_use1 = training_sets(objective,method,it=t)
                 
                 
         	# gradient (shape len(x_use) x 1)
@@ -134,17 +137,17 @@ if __name__ == '__main__':
                 iteration+=1
         return(xi)
     
-    def MGD(objective,LR=0.001, method='batch',alpha = 0.001):
+    def MGD(objective,method,LR=0.001,alpha = 0.001):
 
         global iteration,iterations,loss_train,loss_val,delta
         delta = []
-        X_use,y_use = training_sets(objective,method,it=0)
+        #X_use,y_use = training_sets(objective,method,it=0)
         #parameters:
         
         dx=0.001													
         t=0 	 							
         tmax=100000				
-        tol = 10**-8
+        tol = 10**-5
         NDIM = 4
         delta.append(np.zeros(NDIM))
         #xi =np.random.uniform(np.min(X_use),np.max(X_use),NDIM) ## initial guess
@@ -158,9 +161,9 @@ if __name__ == '__main__':
 
         while(t<=tmax):
             t=t+1
-            
-            if X_use.shape[0] != X.shape[0]:
-                X_use,y_use = training_sets(objective,method,it=t)
+            X_use,y_use = training_sets(objective,method)
+            #if X_use.shape[0] != X.shape[0]:
+             #   X_use,y_use = training_sets(objective,method,it=t)
                 
                 
         	# gradient (shape len(x_use) x 1)
@@ -203,7 +206,7 @@ if __name__ == '__main__':
         return(xi)
     
     
-    def optimizer(objective,algo = 'GD',LR=0.001, method='batch'):
+    def optimizer(objective, method,algo = 'GD',LR=0.001):
         global met, alg
         met = method
         alg = algo
@@ -254,7 +257,7 @@ if __name__ == '__main__':
     loss_val = []
     iteration=0
     
-    A,w,x0,s = optimizer([X_train_2,y_train_2],algo = 'GD')
+    A,w,x0,s = optimizer([X_train_2,y_train_2],algo = 'GD',method = 'batch')
     
     ## training & validation errors
     plt.scatter(iterations,loss_train,c = 'r',marker = 'o')
