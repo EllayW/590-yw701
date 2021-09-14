@@ -295,7 +295,7 @@ if __name__ == '__main__':
     
     logreg_pred = logreg_f(X_train_2, A,w,x0,s)
     logreg_pred_val = logreg_f(X_validation_2, A,w,x0,s)
-    
+    logreg_pred_test = logreg_f(X_test_2, A,w,x0,s)
     
     ############## visualize the boundary of train dataset:#############
     
@@ -325,8 +325,9 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
     ax.scatter(logreg_pred,y_train_2, marker = 'o')
     ax.scatter(logreg_pred_val,y_validation_2, marker = 'x')
+    ax.scatter(logreg_pred_test,y_test_2, marker = '*')
     plt.ylabel('y_pred')
     plt.xlabel('y_data')
-    plt.legend(['train','validation'])
+    plt.legend(['train','validation','test'])
     plt.title('Prediction vs. True Data by method by '+ alg+ ' and '+ met)
     plt.show()
