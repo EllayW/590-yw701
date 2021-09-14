@@ -5,7 +5,7 @@ Created on Fri Sep  3 14:24:41 2021
 @author: Ella
 """
 import random
-random.seed(1001)
+#random.seed(1001)
 import pandas as pd
 import json
 import matplotlib.pyplot as plt
@@ -142,7 +142,7 @@ if __name__ == '__main__':
     inversed_y_train = sc_fit2.inverse_transform(y_train_18)
     inversed_x_test = sc_fit1.inverse_transform(X_test_18)
     inversed_y_test = sc_fit2.inverse_transform(y_test_18)
-    inversed_pred = sc_fit2.inverse_transform(m*X_train_18+b)
+    inversed_pred = sc_fit2.inverse_transform(m*X_test_18+b)
     
     ## measure of success
     mse_olr = olr_mse(m,b,sc_fit1.inverse_transform(X_test_18),
@@ -155,14 +155,25 @@ if __name__ == '__main__':
     ax.scatter(inversed_x_test,inversed_y_test, marker = 'x')
     ax.scatter(X[:,0][data_weight[:,1]>=18],
                X[:,1][data_weight[:,1]>=18], marker = 'o')
-    ax.plot(inversed_x_train,inversed_pred,color = 'black')
+    ax.plot(inversed_x_test,inversed_pred,color = 'black')
     
     plt.ylabel('weight')
     plt.xlabel('age')
     plt.legend(['prediction line','train dataset','test dataset','unused data'])
     plt.title('Linear Regression with Age and Weight')
     plt.show()
-      
+    
+    
+    ## visualiza the test y/pred_y:
+    inversed_pred_v2 = sc_fit2.inverse_transform(m*X_train_18+b)
+    fig, ax = plt.subplots()
+    ax.scatter(inversed_y_train,inversed_pred_v2, marker = 'o')
+    ax.scatter(inversed_y_test,inversed_pred, marker = 'x')
+    plt.ylabel('True Value')
+    plt.xlabel('Predicted Value')
+    plt.legend(['Training', 'Testing'])
+    plt.title('True/Prediction Value in Linear Regression')
+    plt.show()
     
     ## visualize the train/test loss:
 
@@ -217,7 +228,7 @@ if __name__ == '__main__':
     inversed_y_train = sc_fit2.inverse_transform(y_train_2)
     inversed_x_test = sc_fit1.inverse_transform(X_test_2)
     inversed_y_test = sc_fit2.inverse_transform(y_test_2)
-    inversed_pred = sc_fit2.inverse_transform(logreg_f(X_train_2,A,w,x0,s))
+    inversed_pred = sc_fit2.inverse_transform(logreg_f(X_test_2,A,w,x0,s))
     
     ## measure of success
     mse_logreg = logreg_mse(sc_fit1.inverse_transform(X_test_2),
@@ -225,10 +236,10 @@ if __name__ == '__main__':
     mae_logreg = logreg_mae(sc_fit1.inverse_transform(X_test_2),
                             sc_fit2.inverse_transform(y_test_2),A,w,x0,s)
     
-    orders = np.argsort(inversed_x_train.ravel())
+    orders = np.argsort(inversed_x_test.ravel())
     
     fig, ax = plt.subplots()
-    ax.plot(inversed_x_train[orders],inversed_pred[orders],color = 'black',)
+    ax.plot(inversed_x_test[orders],inversed_pred[orders],color = 'black')
     ax.scatter(inversed_x_train,inversed_y_train, marker = 'o')
     ax.scatter(inversed_x_test,inversed_y_test, marker = 'x')
     plt.ylabel('weight')
@@ -237,7 +248,19 @@ if __name__ == '__main__':
     plt.title('Logistic Regression with Age and Weight')
     plt.show()
     
-    ##################################################################
+        
+    ## visualiza the test y/pred_y:
+    inversed_pred_v2 = sc_fit2.inverse_transform(logreg_f(X_train_2,A,w,x0,s))
+    fig, ax = plt.subplots()
+    ax.scatter(inversed_y_train,inversed_pred_v2, marker = 'o')
+    ax.scatter(inversed_y_test,inversed_pred, marker = 'x')
+    plt.ylabel('True Value')
+    plt.xlabel('Predicted Value')
+    plt.legend(['Training', 'Testing'])
+    plt.title('True/Prediction Value in Linear Regression')
+    plt.show()
+    
+   ##################################################################
     ######## Logistic regression between Is_adult and Weight:#########
     ##################################################################
     
@@ -288,7 +311,7 @@ if __name__ == '__main__':
     inversed_y_train = y_train
     inversed_x_test = sc_fit1.inverse_transform(X_test)
     inversed_y_test = y_test
-    inversed_pred = logreg_f(X_train,A,w,x0,s)
+    inversed_pred = logreg_f(X_test,A,w,x0,s)
     
     ### measure of success
     mse_classifier_logreg = logreg_mse(sc_fit1.inverse_transform(X_test),
@@ -296,10 +319,10 @@ if __name__ == '__main__':
     mae_classifier_logreg = logreg_mae(sc_fit1.inverse_transform(X_test),
                                        y_test,A,w,x0,s)
     
-    orders = np.argsort(inversed_x_train.ravel())
+    orders = np.argsort(inversed_x_test.ravel())
             
     fig, ax = plt.subplots()
-    ax.plot(inversed_x_train[orders], inversed_pred[orders], color='black')
+    ax.plot(inversed_x_test[orders], inversed_pred[orders], color='black')
     ax.scatter(inversed_x_train,inversed_y_train, marker = 'o')#
     ax.scatter(inversed_x_test,inversed_y_test, marker = 'x')
     
@@ -308,3 +331,15 @@ if __name__ == '__main__':
     plt.legend(['prediction line','train dataset','test dataset'])
     plt.title('Logistic Regression with Is_adult and Weight')
     plt.show()
+    
+    
+    ## visualiza the test y/pred_y:
+    inversed_pred_v2 = sc_fit2.inverse_transform(logreg_f(X_train,A,w,x0,s))
+    fig, ax = plt.subplots()
+    ax.scatter(inversed_y_train,inversed_pred_v2, marker = 'o')
+    ax.scatter(inversed_y_test,inversed_pred, marker = 'x')
+    plt.ylabel('True Value')
+    plt.xlabel('Predicted Value')
+    plt.legend(['Training', 'Testing'])
+    plt.title('True/Prediction Value in Linear Regression')
+    plt.show() 
