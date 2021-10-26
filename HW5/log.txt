@@ -1,0 +1,44 @@
+Monday or Tuesday,Practical Agitation, Pride and Prejudice are chosen to be the text data.
+By Train/Validation/Test Split, here are the data shape:
+X_train is 3247
+X_val is 812
+X_test is 1015
+
+Train by RNN:
+1. embedding layer with 32 layers
+2. LSTM layer with 64 layers
+3. Dense layer, reduce the dimension to 3 for classification.
+4. compile with rmsprop optimizer.
+
+Hyperparamters:
+1. epoches number:5
+2. Kfold k =1
+3. Mini-batch
+4. Ridge for regulation
+5. 1000 for max_features
+6. 100 for maxlen
+
+Train by CNN:
+1. embedding layer with 32 layers
+2. conv1d layer with kernel size = 3x3 and 128 layers
+3. MaxPooling1D layer
+4. Dense layer with 64 layers and relu as activation function
+5. Dense layer for classification and softmax as activation function
+6. compile with rmsprop optimizer.
+
+Hyperparamters:
+1. epoches number:20
+2. Kfold k =1
+3. Mini-batch
+4. LASSO for regulation
+5. 1000 for max_features
+6. 100 for maxlen
+
+Final Metrics:
+Use Rnn, the test loss is 1.1306134393062497
+the test accuracy is 0.37832513451576233
+AUC is about 0.50 for each class.
+
+Use Cnn, the test loss is 1.109588186846578
+the test accuracy is 0.4088670015335083
+AUC is about 0.53 for each class.
