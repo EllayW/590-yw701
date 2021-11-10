@@ -1,0 +1,21 @@
+1. Model Summary:
+
+Model: "sequential_9"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense_17 (Dense)             (None, 200)               157000    
+_________________________________________________________________
+dense_18 (Dense)             (None, 784)               157584    
+=================================================================
+Total params: 314,584
+Trainable params: 314,584
+Non-trainable params: 0
+
+2. Test Accuracy:
+
+The test accuracy of the "train" data is 0.017550783914824328. And the test accuracy of the "test" data is 0.017310048267245293.
+
+3. Anomly Detection:
+
+The anomaly dataset has 32,791 over 60,000 records as "anomalies". The train dataset has 0 over 60,000 records as anomalies.
