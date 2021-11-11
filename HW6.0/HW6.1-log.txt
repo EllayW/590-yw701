@@ -1,21 +1,21 @@
-1. Model Summary:
+1. AE Model Summary:
 
-Model: "sequential_9"
+Model: "sequential_3"
 _________________________________________________________________
 Layer (type)                 Output Shape              Param #   
 =================================================================
-dense_17 (Dense)             (None, 200)               157000    
+dense_5 (Dense)              (None, 100)               78500     
 _________________________________________________________________
-dense_18 (Dense)             (None, 784)               157584    
+dense_6 (Dense)              (None, 784)               79184     
 =================================================================
-Total params: 314,584
-Trainable params: 314,584
+Total params: 157,684
+Trainable params: 157,684
 Non-trainable params: 0
 
 2. Test Accuracy:
 
-The test accuracy of the "train" data is 0.017550783914824328. And the test accuracy of the "test" data is 0.017310048267245293.
+The test accuracy of the "train" data is 0.010. And the test accuracy of the "test" data is 0.009.
 
 3. Anomly Detection:
 
-The anomaly dataset has 32,791 over 60,000 records as "anomalies". The train dataset has 0 over 60,000 records as anomalies.
+The anomaly dataset has 49，842 over 60,000 records as "anomalies", which is 83.07%. The train dataset has 0 over 60,000 records as anomalies, which is 0%..

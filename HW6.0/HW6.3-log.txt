@@ -1,0 +1,35 @@
+1. ConV Model Summary with Mnist dataset:
+
+Model: "model_6"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_6 (InputLayer)         (None, 32, 32, 3)         0         
+_________________________________________________________________
+conv2d_26 (Conv2D)           (None, 32, 32, 12)        336       
+_________________________________________________________________
+max_pooling2d_11 (MaxPooling (None, 16, 16, 12)        0         
+_________________________________________________________________
+conv2d_27 (Conv2D)           (None, 16, 16, 8)         1544      
+_________________________________________________________________
+max_pooling2d_12 (MaxPooling (None, 4, 4, 8)           0         
+_________________________________________________________________
+conv2d_28 (Conv2D)           (None, 4, 4, 8)           1032      
+_________________________________________________________________
+up_sampling2d_11 (UpSampling (None, 16, 16, 8)         0         
+_________________________________________________________________
+up_sampling2d_12 (UpSampling (None, 32, 32, 8)         0         
+_________________________________________________________________
+conv2d_29 (Conv2D)           (None, 32, 32, 3)         219       
+=================================================================
+Total params: 3,131
+Trainable params: 3,131
+Non-trainable params: 0
+
+2. Test Accuracy:
+
+The test error of the "train" data is 0.020. And the test error of the "test" data is 0.0246.
+
+3. Anomly Detection:
+
+The anomaly dataset has 50 over 49,500 records as "anomalies", which is 0.1%. The train dataset has 0 over 50,000 records as anomalies, which is 0%..

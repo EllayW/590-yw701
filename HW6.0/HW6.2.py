@@ -1,25 +1,25 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[59]:
 
 
 import os
-from keras.datasets import boston_housing
-from keras.models import Sequential
+from keras.layers import Conv2D
+from keras.layers import Input
+from keras.layers import MaxPooling2D, UpSampling2D
+from keras.models import Sequential,Model
 from keras.layers import Dense, Activation
 from keras import models
 from keras import layers
 import numpy as np
 import matplotlib.pyplot as plt
-from keras.optimizers import SGD
-from keras.regularizers import l1, l2
 from keras.datasets import mnist
 from keras.datasets import fashion_mnist
 from keras.models import load_model
 
 
-# In[2]:
+# In[60]:
 
 
 ################################################################
@@ -27,57 +27,56 @@ from keras.models import load_model
 ################################################################
 
 
-# In[43]:
+# In[61]:
 
 
 ### define hyperparameters:
-#f1=lambda NKEEP: int(0.01*NKEEP)
 epochs=20
 optimizer = 'rmsprop'
-learning_rate = .01
-LASSO = l1(learning_rate)
-RIDGE = l2(learning_rate)
 loss = 'mean_squared_error'
-regulation = LASSO
-batch_size=1000
-n_bottleneck = 100
+batch_size=100
 
 
-# In[44]:
+# In[62]:
 
 
 ### read the input:
 (X, Y), (test_images, test_labels) = mnist.load_data()
 
 
-# In[45]:
+# In[63]:
 
 
 ### normalization:
 X = X.astype('float32') / 255.
 test_images = test_images.astype('float32') / 255.
 
-
 ### flattening:
-X = X.reshape((len(X), np.prod(X.shape[1:])))
-test_images = test_images.reshape((len(test_images), np.prod(test_images.shape[1:])))
+X = X.reshape((len(X), 28,28,1))
+test_images = test_images.reshape((len(test_images), 28,28,1))
 
 
-# In[6]:
+# In[64]:
 
 
 ### build the base model:
-def DAE():
-    model = models.Sequential()
-    model.add(layers.Dense(n_bottleneck, activation='relu', input_shape=(28 * 28,)))
-    model.add(layers.Dense(28*28,  activation='relu'))
-    return(model)
+def ConV():
+    input_img = Input(shape=(28, 28, 1))
+    enc_conv1 = Conv2D(10, (3, 3), activation='relu', padding='same')(input_img)
+    enc_pool1 = MaxPooling2D((2, 2), padding='same')(enc_conv1)
+    enc_conv2 = Conv2D(6, (4, 4), activation='relu', padding='same')(enc_pool1)
+    enc_ouput = MaxPooling2D((4, 4), padding='same')(enc_conv2)
 
-### compile the model:
-def final_model(mod):
-    mod.compile(optimizer=optimizer,
-                      loss=loss)
-    return(mod)
+    dec_conv2 = Conv2D(6, (4, 4), activation='relu', padding='same')(enc_ouput)
+    dec_upsample2 = UpSampling2D((4, 4))(dec_conv2)
+    dec_conv3 = Conv2D(10, (3, 3), activation='relu')(dec_upsample2)
+    dec_upsample3 = UpSampling2D((2, 2))(dec_conv3)
+    dec_output = Conv2D(1, (3, 3), activation='linear', padding='same')(dec_upsample3)
+
+    autoencoder = Model(input_img, dec_output)
+    autoencoder.compile(optimizer='rmsprop', loss=loss)
+    autoencoder.summary()
+    return(autoencoder)
 
 ### evaluate the model:
 def evaluation(mod,X,vis=True):
@@ -89,7 +88,7 @@ def evaluation(mod,X,vis=True):
     
     history = mod.fit(X, X,validation_split=0.2,
         epochs=epochs, batch_size=batch_size)
-
+    
     val_mse_history = history.history['val_loss']
     train_mse_history = history.history['loss']
     train_mse_histories.append(train_mse_history)
@@ -98,7 +97,7 @@ def evaluation(mod,X,vis=True):
     average_val_mse_history = [np.mean([x[i] for x in val_mse_histories])             for i in range(epochs)]
     average_train_mse_history = [np.mean([x[i] for x in train_mse_histories])             for i in range(epochs)]
     
-    save_name = 'HW6.1-ae.h5'
+    save_name = 'HW6.2-conv.h5'
     mod.save(save_name)
     ## visualizations:
     if vis:
@@ -107,37 +106,36 @@ def evaluation(mod,X,vis=True):
     return([average_val_mse_history,average_train_mse_history])
 
 
-# In[9]:
+# In[65]:
 
 
 ### Build the model:
-model = DAE()
-model = final_model(model)
+model = ConV()
 avg_val,avg_train = evaluation(model,X)
 plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
+plt.ylabel('MSE')
 plt.title("Validation/Train MSE")
 plt.legend(['validation', 'train'], loc='upper left')
 plt.show()
 
 
-# In[10]:
+# In[66]:
 
 
 ### print out the model summary:
-plt.savefig('HW6.1-train-val-loss.png')
+plt.savefig('HW6.2-train-val-loss.png')
 model.summary()
-model = load_model('HW6.1-ae.h5')
+model = load_model('HW6.2-conv.h5')
 model.evaluate(X,X,batch_size = batch_size)
 
 
-# In[11]:
+# In[67]:
 
 
 model.evaluate(test_images,test_images,batch_size = batch_size)
 
 
-# In[56]:
+# In[68]:
 
 
 ################################################################
@@ -145,13 +143,13 @@ model.evaluate(test_images,test_images,batch_size = batch_size)
 ################################################################
 
 
-# In[36]:
+# In[69]:
 
 
 (X_fas, Y_fas), (test_images_fas, test_labels_fas) = fashion_mnist.load_data()
 
 
-# In[37]:
+# In[70]:
 
 
 ### normalization:
@@ -159,11 +157,10 @@ X_fas = X_fas.astype('float32') / 255.
 #test_images_fas = test_images_fas.astype('float32') / 255.
 
 ### flattening:
-X_fas = X_fas.reshape((len(X_fas), np.prod(X_fas.shape[1:])))
-#test_images_fas= test_images_fas.reshape((len(test_images_fas), np.prod(test_images_fas.shape[1:])))
+X_fas = X_fas.reshape((len(X_fas), 28,28,1))
 
 
-# In[46]:
+# In[71]:
 
 
 ### visualize the input/output:
@@ -185,45 +182,52 @@ ax[5].imshow(X2[I2])
 plt.show()
 
 
-# In[47]:
+# In[72]:
 
 
-f.savefig('HW6.1-history.png')
+f.savefig('HW6.2-history.png')
 
 
-# In[48]:
+# In[73]:
 
 
 ### define threshold:
 thres = 4*model.evaluate(X,X,batch_size = batch_size)
 
 
-# In[49]:
+# In[74]:
 
 
 def count_anomaly(dataset):
     ## dataset = X_fas or X
     count = 0
     for i in range(dataset.shape[0]):
-        dat = dataset[i].reshape(1,784)
+        dat = dataset[i].reshape(1,28,28,1)
         err = model.evaluate(dat,dat)
         if err > thres:
             count +=1
     return(count)
 
 
-# In[50]:
+# In[75]:
 
 
 ### count anomalies in the train dataset
-count_anomaly(X)
+count1 = count_anomaly(X)
+print(count1)
 
 
-# In[51]:
+# In[76]:
 
 
 ### count anomalies in the anomaly dataset
-count_anomaly(X_fas)
+count2 = count_anomaly(X_fas)
+
+
+# In[77]:
+
+
+count2
 
 
 # In[ ]:
